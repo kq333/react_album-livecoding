@@ -5,28 +5,18 @@ import usersFromServer from './api/users';
 import photosFromServer from './api/photos';
 import albumsFromServer from './api/albums';
 
+const newUser = usersFromServer.map(user => {
+  const photos = photosFromServer.find(photo => user.id === photo.albumId);
+  const userAlbum = albumsFromServer.find(users => user.id === users.id);
 
-const users = usersFromServer.map(user => {
-
-    const photos = photosFromServer.find(photo => user.id === photo.albumId);
-    const userAlbum = albumsFromServer.find(users =>
-      user.id === users.id
-      );
-
-      return {
-        ...user,
-        photo: photos ,
-        user: userAlbum,
-
-      }
-
-})
+  return {
+    ...user,
+    photo: photos,
+    user: userAlbum,
+  };
+});
 
 export const App: React.FC = () => {
-
-console.log(users)
-
-
   return (
     <div className="section">
       <div className="container">
@@ -202,20 +192,20 @@ console.log(users)
 
             <tbody>
 
-              {users.map((user, index) =>
-                  <tr  key={user.id}>
+              {newUser.map((user, index) => (
+                <tr key={user.id}>
                   <td className="has-text-weight-bold">
                     {index + 1}
                   </td>
                   <td>
-                    <img src={user.photo?.url} alt="photo" />
+                    <img src={user.photo?.url} alt={`user ${index + 1}`} />
                   </td>
                   <td>{user.photo?.title}</td>
                   <td className="has-text-link">
-                   {user.name}
+                    {user.name}
                   </td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </table>
         </div>
